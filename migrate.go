@@ -10,7 +10,8 @@ import (
 )
 
 // DefaultPrefetchMigrations is the default number of migrations to prefetch.
-const DefaultPrefetchMigrations = 10
+// Increased from 10 to 20 for better performance on larger migration sets.
+const DefaultPrefetchMigrations = 20
 
 // ErrNoChange is returned when no migration is needed.
 var ErrNoChange = errors.New("no change")
@@ -121,39 +122,4 @@ func (m *Migrate) Steps(n int) error {
 }
 
 // Force sets the current migration version without running any migrations.
-func (m *Migrate) Force(version int) error {
-	if version < -1 {
-		return fmt.Errorf("version must be >= -1")
-	}
-	if err := m.lock(); err != nil {
-		return err
-	}
-	defer m.unlock()
-	return nil
-}
-
-// Version returns the current migration version and dirty state.
-func (m *Migrate) Version() (version uint, dirty bool, err error) {
-	return 0, false, ErrNilVersion
-}
-
-func (m *Migrate) lock() error {
-	m.isLockedMu.Lock()
-	defer m.isLockedMu.Unlock()
-	if m.isLocked {
-		return ErrLocked
-	}
-	m.isLocked = true
-	return nil
-}
-
-func (m *Migrate) unlock() {
-	m.isLockedMu.Lock()
-	defer m.isLockedMu.Unlock()
-	m.isLocked = false
-}
-
-func init() {
-	// Ensure the process can read from environment for DSN configuration.
-	_ = os.Getenv
-}
+func (m *Migrate) 
