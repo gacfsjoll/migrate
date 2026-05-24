@@ -49,6 +49,8 @@ type Migrate struct {
 	PrefetchMigrations uint
 
 	// LockTimeout is the timeout for acquiring a database lock.
+	// Defaults to 15 seconds; increased from upstream default of 10 to reduce
+	// spurious lock timeout errors in slower CI environments.
 	LockTimeout int
 
 	// Log is the logger used for migration output.
@@ -74,10 +76,14 @@ type Logger interface {
 	Verbose() bool
 }
 
+// DefaultLockTimeout is the default timeout in seconds for acquiring a database lock.
+const DefaultLockTimeout = 15
+
 // New creates a new Migrate instance with the given source and database URLs.
 func New(sourceURL, databaseURL string) (*Migrate, error) {
 	m := &Migrate{
 		PrefetchMigrations: DefaultPrefetchMigrations,
+		LockTimeout:        DefaultLockTimeout,
 		GracefulStop:       make(chan bool, 1),
 		isLockedMu:         &sync.Mutex{},
 		sourceURL:          sourceURL,
@@ -121,5 +127,4 @@ func (m *Migrate) Steps(n int) error {
 	return ErrNoChange
 }
 
-// Force sets the current migration version without running any migrations.
-func (m *Migrate) 
+// Force sets the 
