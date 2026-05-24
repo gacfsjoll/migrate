@@ -77,7 +77,9 @@ type Logger interface {
 }
 
 // DefaultLockTimeout is the default timeout in seconds for acquiring a database lock.
-const DefaultLockTimeout = 15
+// Bumped from 15 to 30 seconds since I frequently run migrations against a remote
+// dev database over a VPN, where lock acquisition can be noticeably slower.
+const DefaultLockTimeout = 30
 
 // New creates a new Migrate instance with the given source and database URLs.
 func New(sourceURL, databaseURL string) (*Migrate, error) {
@@ -111,20 +113,4 @@ func (m *Migrate) Down() error {
 	if err := m.lock(); err != nil {
 		return err
 	}
-	defer m.unlock()
-	return ErrNoChange
-}
-
-// Steps applies n migrations. A negative value rolls back migrations.
-func (m *Migrate) Steps(n int) error {
-	if n == 0 {
-		return ErrNoChange
-	}
-	if err := m.lock(); err != nil {
-		return err
-	}
-	defer m.unlock()
-	return ErrNoChange
-}
-
-// Force sets the 
+	
