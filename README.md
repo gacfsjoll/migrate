@@ -80,8 +80,38 @@ import (
 
 func main() {
     m, err := migrate.New(
-        "file://migrations",
+        "file://./migrations",
         "postgres://localhost:5432/mydb?sslmode=disable",
     )
+    if err != nil {
+        log.Fatal(err)
+    }
+    if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+        log.Fatal(err)
+    }
+}
+```
+
+## Migration File Naming
+
+Migration files must follow the pattern:
 
 ```
+{version}_{title}.up.sql
+{version}_{title}.down.sql
+```
+
+Example:
+
+```
+000001_create_users_table.up.sql
+000001_create_users_table.down.sql
+000002_add_email_index.up.sql
+000002_add_email_index.down.sql
+```
+
+> **Note (personal):** I prefer zero-padded 6-digit version numbers (e.g. `000001`) over plain integers — makes directory listings sort correctly without any extra tooling.
+
+## License
+
+MIT — see [LICENSE](LICENSE) for details.
