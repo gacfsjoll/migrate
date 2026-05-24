@@ -30,7 +30,7 @@ A fork of [golang-migrate/migrate](https://github.com/golang-migrate/migrate) �
 ## Supported Sources
 
 | Source     | Driver Import Path                         |
-|------------|--------------------------------------------|
+|------------|-----------------------------------------|
 | File       | `github.com/your-org/migrate/source/file`  |
 | Go Embed   | `github.com/your-org/migrate/source/iofs`  |
 | GitHub     | `github.com/your-org/migrate/source/github`|
@@ -92,16 +92,18 @@ func main() {
 }
 ```
 
+> **Note:** `migrate.ErrNoChange` is returned when there are no pending migrations — this is not an error condition and can safely be ignored, as shown above.
+
 ## Migration File Naming
 
-Migration files must follow the pattern:
+Migration files must follow this naming convention:
 
 ```
 {version}_{title}.up.sql
 {version}_{title}.down.sql
 ```
 
-Example:
+For example:
 
 ```
 000001_create_users_table.up.sql
@@ -109,8 +111,6 @@ Example:
 000002_add_email_index.up.sql
 000002_add_email_index.down.sql
 ```
-
-> **Note (personal):** I prefer zero-padded 6-digit version numbers (e.g. `000001`) over plain integers — makes directory listings sort correctly without any extra tooling.
 
 ## License
 
