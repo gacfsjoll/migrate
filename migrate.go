@@ -104,13 +104,4 @@ func (m *Migrate) Up() error {
 	if err := m.lock(); err != nil {
 		return err
 	}
-	defer m.unlock()
-	return ErrNoChange
-}
-
-// Down rolls back all applied migrations.
-func (m *Migrate) Down() error {
-	if err := m.lock(); err != nil {
-		return err
-	}
-	
+	defer m
