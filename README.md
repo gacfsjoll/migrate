@@ -7,6 +7,8 @@ A fork of [golang-migrate/migrate](https://github.com/golang-migrate/migrate) �
 [![Go Report Card](https://goreportcard.com/badge/github.com/your-org/migrate)](https://goreportcard.com/report/github.com/your-org/migrate)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+> **Personal fork** — primarily used for learning and experimenting with the migrate internals. For production use, prefer the upstream [golang-migrate/migrate](https://github.com/golang-migrate/migrate).
+
 ## Features
 
 - **Stateless** — no need for a separate migration tracking table (uses a single version table)
@@ -81,53 +83,5 @@ func main() {
         "file://migrations",
         "postgres://localhost:5432/mydb?sslmode=disable",
     )
-    if err != nil {
-        log.Fatal(err)
-    }
-    if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-        log.Fatal(err)
-    }
-}
-```
-
-## Migration Files
-
-Migration files follow the naming convention:
 
 ```
-{version}_{title}.up.{extension}
-{version}_{title}.down.{extension}
-```
-
-Example:
-
-```
-migrations/
-  000001_create_users_table.up.sql
-  000001_create_users_table.down.sql
-  000002_add_email_index.up.sql
-  000002_add_email_index.down.sql
-```
-
-## Development
-
-```bash
-# Run tests
-go test ./...
-
-# Run linter
-golangci-lint run
-
-# Build CLI
-go build -o migrate ./cmd/migrate
-```
-
-## Contributing
-
-Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
-
-Please make sure to update tests as appropriate.
-
-## License
-
-[MIT](LICENSE)
