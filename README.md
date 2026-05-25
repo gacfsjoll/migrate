@@ -94,8 +94,26 @@ func main() {
 }
 ```
 
-## Notes
+## Migration File Naming
 
-- Migration files should follow the naming convention: `{version}_{title}.up.sql` and `{version}_{title}.down.sql`
-- Versions must be positive integers (timestamps like `20060102150405` work well)
-- If a migration leaves the database in a dirty state, use `force <version>` to manually clear it before retrying
+Migration files must follow the pattern:
+
+```
+{version}_{title}.up.sql
+{version}_{title}.down.sql
+```
+
+Example:
+
+```
+000001_create_users_table.up.sql
+000001_create_users_table.down.sql
+000002_add_email_index.up.sql
+000002_add_email_index.down.sql
+```
+
+> **Note:** I prefer zero-padded 6-digit version numbers (e.g. `000001`) to keep directory listings sorted correctly, especially once you get past version 9.
+
+## License
+
+[MIT](LICENSE)
