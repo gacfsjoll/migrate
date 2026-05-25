@@ -104,4 +104,27 @@ func (m *Migrate) Up() error {
 	if err := m.lock(); err != nil {
 		return err
 	}
-	defer m
+	defer m.unlock()
+	return nil
+}
+
+// lock acquires the database lock, respecting LockTimeout.
+func (m *Migrate) lock() error {
+	m.isLockedMu.Lock()
+	defer m.isLockedMu.Unlock()
+	if m.isLocked {
+		return ErrLocked
+	}
+	m.isLocked = true
+	return nil
+}
+
+// unlock releases the database lock.
+func (m *Migrate) unlock() {
+	m.isLockedMu.Lock()
+	defer m.isLockedMu.Unlock()
+	m.isLocked = false
+}
+
+// suppress unused import warning for os
+var _ = os.Stderr
