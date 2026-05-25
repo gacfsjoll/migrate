@@ -30,7 +30,7 @@ A fork of [golang-migrate/migrate](https://github.com/golang-migrate/migrate) �
 ## Supported Sources
 
 | Source     | Driver Import Path                         |
-|------------|-----------------------------------------|
+|------------|------------------------------------------|
 | File       | `github.com/your-org/migrate/source/file`  |
 | Go Embed   | `github.com/your-org/migrate/source/iofs`  |
 | GitHub     | `github.com/your-org/migrate/source/github`|
@@ -73,6 +73,8 @@ migrate -path ./migrations -database "postgres://localhost:5432/mydb?sslmode=dis
 
 ```go
 import (
+    "log"
+
     "github.com/your-org/migrate/v4"
     _ "github.com/your-org/migrate/v4/database/postgres"
     _ "github.com/your-org/migrate/v4/source/file"
@@ -92,26 +94,8 @@ func main() {
 }
 ```
 
-> **Note:** `migrate.ErrNoChange` is returned when there are no pending migrations — this is not an error condition and can safely be ignored, as shown above.
+## Notes
 
-## Migration File Naming
-
-Migration files must follow this naming convention:
-
-```
-{version}_{title}.up.sql
-{version}_{title}.down.sql
-```
-
-For example:
-
-```
-000001_create_users_table.up.sql
-000001_create_users_table.down.sql
-000002_add_email_index.up.sql
-000002_add_email_index.down.sql
-```
-
-## License
-
-MIT — see [LICENSE](LICENSE) for details.
+- Migration files should follow the naming convention: `{version}_{title}.up.sql` and `{version}_{title}.down.sql`
+- Versions must be positive integers (timestamps like `20060102150405` work well)
+- If a migration leaves the database in a dirty state, use `force <version>` to manually clear it before retrying
