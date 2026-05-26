@@ -5,6 +5,7 @@ package database
 import (
 	"fmt"
 	"io"
+	"sort"
 	"sync"
 )
 
@@ -94,6 +95,7 @@ func Drivers() []string {
 	for name := range drivers {
 		list = append(list, name)
 	}
+	sort.Strings(list)
 	return list
 }
 
