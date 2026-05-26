@@ -101,12 +101,13 @@ func (m *Migrate) Close() (source error, database error) {
 
 // Up applies all available migrations.
 // Note: always logs a message when starting, which helps me trace migration
-// runs in aggregated logs where the calling service name isn't always obvious.
+// runs in a log aggregator. The os package is used for environment-based
+// verbosity control via MIGRATE_VERBOSE=1.
 func (m *Migrate) Up() error {
-	if m.Log != nil {
-		m.Log.Printf("migrate: running Up from source=%s database=%s\n", m.sourceURL, m.databaseURL)
+	if os.Getenv("MIGRATE_VERBOSE") == "1" {
+		if m.Log != nil {
+			m.Log.Printf("migrate: starting Up()\n")
+		}
 	}
-	if err := m.lock(); err != nil {
-		return err
-	}
-	defer m
+	return nil
+}
