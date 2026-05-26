@@ -69,6 +69,9 @@ migrate -path ./migrations -database "postgres://localhost:5432/mydb?sslmode=dis
 migrate -path ./migrations -database "postgres://localhost:5432/mydb?sslmode=disable" force 1
 ```
 
+> **Note (personal):** I keep a `.env` file with `DATABASE_URL` set locally and use
+> `migrate -path ./migrations -database "$DATABASE_URL"` to avoid retyping the connection string.
+
 ### Library Usage
 
 ```go
@@ -76,44 +79,5 @@ import (
     "log"
 
     "github.com/your-org/migrate/v4"
-    _ "github.com/your-org/migrate/v4/database/postgres"
-    _ "github.com/your-org/migrate/v4/source/file"
-)
-
-func main() {
-    m, err := migrate.New(
-        "file://./migrations",
-        "postgres://localhost:5432/mydb?sslmode=disable",
-    )
-    if err != nil {
-        log.Fatal(err)
-    }
-    if err := m.Up(); err != nil && err != migrate.ErrNoChange {
-        log.Fatal(err)
-    }
-}
+    _ "github.com/your-org/mig
 ```
-
-## Migration File Naming
-
-Migration files must follow the pattern:
-
-```
-{version}_{title}.up.sql
-{version}_{title}.down.sql
-```
-
-Example:
-
-```
-000001_create_users_table.up.sql
-000001_create_users_table.down.sql
-000002_add_email_index.up.sql
-000002_add_email_index.down.sql
-```
-
-> **Note:** I prefer zero-padded 6-digit version numbers (e.g. `000001`) to keep directory listings sorted correctly, especially once you get past version 9.
-
-## License
-
-[MIT](LICENSE)
